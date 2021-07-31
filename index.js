@@ -17,7 +17,12 @@ const HEXToRGB = hex => ({
   b: parseInt(hex.slice(5, 7), 16)
 })
 
-const RGBToHEX = (r, g, b) => `#${r.toString(16)}${g.toString(16)}${b.toString(16)}`
+const getHEX = code => {
+  const hex = code.toString(16)
+  return hex.length === 1 ? `0${hex}` : hex
+}
+
+const RGBToHEX = (r, g, b) => `#${getHEX(r)}${getHEX(g)}${getHEX(b)}`
 
 const RGBToHSL = (r, g, b) => {
   r /= 255
