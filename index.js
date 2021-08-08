@@ -1,3 +1,5 @@
+import { colorNames } from "./color-names"
+
 const checkRange = (count, start, end) => {
   if (count < start) return start
   if (count > end) return end
@@ -9,6 +11,26 @@ const checkRGB = (r, g, b) => {
   g = checkRange(g, 0, 255)
   b = checkRange(b, 0, 255)
   return {r, g, b}
+}
+
+const checkColor = color => {
+  if (typeof color !== 'string') return { hex: color, check: false }
+  color = color.toLowerCase()
+  const isHEX = color.slice(0, 1) === '#'
+  
+  if (isHEX) {
+    const validHEX = color.search(/^#[a-f0-9]{3}([a-f0-9]{3})?$/) !== -1
+    return {
+      hex: validHEX && color.length === 4 ? `${color}${color.slice(1, 4)}` : color,
+      check: validHEX
+    }
+  } else {
+    const colorHEX = colorNames[color]
+    return {
+      hex: colorHEX ? colorHEX : color,
+      check: !!colorHEX
+    }
+  }
 }
 
 const HEXToRGB = hex => ({
@@ -101,7 +123,9 @@ const HSLToRGB = (h, s, l) => {
   return checkRGB(r, g, b)
 }
 
-export const lightness = (hex, percent = 0) => {
+export const lightness = (color, percent = 0) => {
+  const { hex, check } = checkColor(color)
+  if (!check) return color
   percent = checkRange(percent, -100, 100)
 
   const {r, g, b} = HEXToRGB(hex)
@@ -120,7 +144,9 @@ export const lightness = (hex, percent = 0) => {
   return RGBToHEX(R, G, B)
 }
 
-export const saturation = (hex, percent = 0) => {
+export const saturation = (color, percent = 0) => {
+  const { hex, check } = checkColor(color)
+  if (!check) return color
   percent = checkRange(percent, -100, 100)
 
   const {r, g, b} = HEXToRGB(hex)
