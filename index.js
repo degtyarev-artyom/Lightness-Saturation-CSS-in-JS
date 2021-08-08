@@ -13,6 +13,11 @@ const checkRGB = (r, g, b) => {
   return {r, g, b}
 }
 
+const getFullHEX = hex => {
+  const [r, g, b] = hex.slice(1, 4).split('')
+  return `#${r}${r}${g}${g}${b}${b}`
+}
+
 const checkColor = color => {
   if (typeof color !== 'string') return { hex: color, check: false }
   color = color.toLowerCase()
@@ -21,7 +26,7 @@ const checkColor = color => {
   if (isHEX) {
     const validHEX = color.search(/^#[a-f0-9]{3}([a-f0-9]{3})?$/) !== -1
     return {
-      hex: validHEX && color.length === 4 ? `${color}${color.slice(1, 4)}` : color,
+      hex: validHEX && color.length === 4 ? getFullHEX(color) : color,
       check: validHEX
     }
   } else {
