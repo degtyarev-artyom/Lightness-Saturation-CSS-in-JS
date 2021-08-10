@@ -130,19 +130,13 @@ const HSLToRGB = (h, s, l) => {
 
 export const lightness = (color, percent = 0) => {
   const { hex, check } = checkColor(color)
-  if (!check) return color
+  if (!check || typeof percent !== 'number' || percent === 0) return color
   percent = checkRange(percent, -100, 100)
 
   const {r, g, b} = HEXToRGB(hex)
   let {h, s, l} = RGBToHSL(r, g, b)
-  const light = percent > 0
-  const range = light ? 100 - l : l
-
-  if (light) {
-    l += Math.round(range * 0.01 * percent)
-  } else {
-    l -= Math.round(range * 0.01 * percent * -1)
-  }
+  const range = percent > 0 ? 100 - l : l
+  l += Math.round(range * 0.01 * percent)
 
   const {r:R, g:G, b:B} = HSLToRGB(h, s, l)
   
@@ -151,21 +145,25 @@ export const lightness = (color, percent = 0) => {
 
 export const saturation = (color, percent = 0) => {
   const { hex, check } = checkColor(color)
-  if (!check) return color
+  if (!check || typeof percent !== 'number' || percent === 0) return color
   percent = checkRange(percent, -100, 100)
 
   const {r, g, b} = HEXToRGB(hex)
   let {h, s, l} = RGBToHSL(r, g, b)
-  const contrast = percent > 0
-  const range = contrast ? 100 - s : s
-
-  if (contrast) {
-    s += Math.round(range * 0.01 * percent)
-  } else {
-    s -= Math.round(range * 0.01 * percent * -1)
-  }
+  const range = percent > 0 ? 100 - s : s
+  s += Math.round(range * 0.01 * percent)
 
   const {r:R, g:G, b:B} = HSLToRGB(h, s, l)
   
   return RGBToHEX(R, G, B)
+}
+
+export const opacity = (color, percent = 100) => {
+  const { hex, check } = checkColor(color)
+  if (!check || typeof percent !== 'number' || percent === 100) return color
+  percent = checkRange(percent, 0, 100)
+
+  const opacity = getHEX(Math.round(percent * 0.01 * 255))
+  
+  return `${hex}${opacity}`
 }
