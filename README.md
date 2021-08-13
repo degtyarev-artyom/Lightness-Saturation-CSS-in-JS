@@ -31,6 +31,7 @@ This func change saturation, lightness and opacity for color
 ## Syntax example
 ```js
 hsla('#cdb6df', 100, -50, 70); // return '#7200c9b3'
+hsla('#cdb6df', 100, -50); // return '#7200c9'
 ```
 ## Custom Parameters
 1st parameter - color in hexadecimal format ('#cdb6df') or color name ('yellow')<br>
