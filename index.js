@@ -167,3 +167,28 @@ export const opacity = (color, percent = 100) => {
   
   return `${hex}${opacity}`
 }
+
+export const hsla = (color, pS = 0, pL = 0, pA = 100) => {
+  const { hex, check } = checkColor(color)
+  if (!check || typeof pS !== 'number' || typeof pL !== 'number' || typeof pA !== 'number') return color
+  if (pS === 0 && pL === 0 && pA === 100) return color
+  pS = checkRange(pS, -100, 100)
+  pL = checkRange(pL, -100, 100)
+  pA = checkRange(pA, 0, 100)
+
+  const {r, g, b} = HEXToRGB(hex)
+  let {h, s, l} = RGBToHSL(r, g, b)
+
+  const rangeS = pS > 0 ? 100 - s : s
+  s += Math.round(rangeS * 0.01 * pS)
+
+  const rangeL = pL > 0 ? 100 - l : l
+  l += Math.round(rangeL * 0.01 * pL)
+
+  const {r:R, g:G, b:B} = HSLToRGB(h, s, l)
+
+  const HEX = RGBToHEX(R, G, B)
+  const A = pA !== 100 ? getHEX(Math.round(pA * 0.01 * 255)) : ''
+
+  return `${HEX}${A}`
+}
